@@ -1,7 +1,5 @@
 services:
   mysql-api:
-    build: .
+    image: "breno1112/spring-mysql-api"
     ports:
       - "8082:8082"
-  redis:
-    image: "breno1112/spring-mysql-api"
