@@ -1,5 +1,17 @@
 server:
-  port: 8082
+  port: 8032
 management:
   server:
-    port: 8083
+    port: 8033
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          r2dbc: DEBUG
+
+spring:
+  r2dbc:
+    url: r2dbc:pool:mysql://localhost:3306/project
+    username: userapi
+    password: userapipassword
