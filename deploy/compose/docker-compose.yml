@@ -3,7 +3,7 @@ services:
   mysql-api:
     image: "breno1112/spring-mysql-api"
     ports:
-      - "8082:8082"
+      - "8032:8032"
   mysql-server:
     image: mysql:latest
     ports:
