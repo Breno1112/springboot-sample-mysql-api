@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.breno.api.sample.mysql.domain.dtos.request.CreateUserRequestDTO;
 import com.breno.api.sample.mysql.domain.dtos.response.UserDTO;
 import com.breno.api.sample.mysql.domain.entities.UserEntity;
 
@@ -21,5 +22,12 @@ public class UserMapper {
 
     public List<UserDTO> fromUserEntitiesToUserDTOs(List<UserEntity> userEntities) {
         return userEntities.stream().map(value -> this.fromUserEntityToUserDTO(value)).collect(Collectors.toList());
+    }
+
+    public UserEntity fromCreateUserRequestDTOToUserEntity(CreateUserRequestDTO body) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(body.getName());
+        userEntity.setAge(body.getAge());
+        return userEntity;
     }
 }
