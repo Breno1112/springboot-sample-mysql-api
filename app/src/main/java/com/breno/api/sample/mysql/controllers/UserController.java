@@ -24,7 +24,7 @@ public class UserController {
         return this.userService.getUsers();
     }
 
-    @PostMapping
+    @PostMapping("/user")
     public Mono<CreateUserResponseDTO> createUser(@RequestBody CreateUserRequestDTO body) {
         return this.userService.createUser(body);
     }

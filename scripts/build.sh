@@ -5,8 +5,11 @@ source updateVersion.sh;
 setVariables;
 updateVersion;
 
-echo $NEW_VERSION
-echo $OLD_VERSION
+current_dir=$PWD
+
+cd ../app;
+./gradlew build
+cd $current_dir
 
 docker build -t $IMAGE_NAME ../app/
 docker tag $IMAGE_NAME $DOCKER_USERNAME/$IMAGE_NAME:$NEW_VERSION
