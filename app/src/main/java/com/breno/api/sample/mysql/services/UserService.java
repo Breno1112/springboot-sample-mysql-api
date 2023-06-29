@@ -1,5 +1,6 @@
 package com.breno.api.sample.mysql.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -25,7 +26,8 @@ public class UserService {
     
 
     public Mono<List<UserDTO>> getUsers() {
-        return this.userRepository.findAll().map(user -> userMapper.fromUserEntityToUserDTO(user)).collectList();
+        return this.userRepository.findAll().map(user -> userMapper.fromUserEntityToUserDTO(user)).collectList()
+        .onErrorReturn(new ArrayList<UserDTO>());
     }
 
     public Mono<CreateUserResponseDTO> createUser(CreateUserRequestDTO body) {
@@ -82,5 +84,31 @@ public class UserService {
                 return Mono.just(responseDataDTO);
             })
             .switchIfEmpty(Mono.just(new ResponseDataDTO<DeleteResponseDTO>(new DeleteResponseDTO(true), null)));
+    }
+
+    public Mono<ResponseDataDTO<UserDTO>> updateUser(String id, CreateUserRequestDTO body) {
+        return Mono.just(Integer.parseInt(id))
+            .flatMap(value -> {
+                return this.userRepository.findById(value);
+            })
+            .flatMap(userEntity -> {
+                userEntity.setAge(body.getAge());
+                userEntity.setName(body.getName());
+                return this.userRepository.save(userEntity);
+            })
+            .flatMap(record -> {
+                return Mono.just(this.userMapper.fromUserEntityToUserDTO(record));
+            })
+            .flatMap(response -> {
+                ResponseDataDTO<UserDTO> responseDataDTO = new ResponseDataDTO<UserDTO>();
+                responseDataDTO.setData(response);
+                return Mono.just(responseDataDTO);
+            })
+            .onErrorResume(error -> {
+                ResponseDataDTO<UserDTO> responseDataDTO = new ResponseDataDTO<UserDTO>();
+                responseDataDTO.setError("Erro ao encontrar usuário");
+                return Mono.just(responseDataDTO);
+            })
+            .switchIfEmpty(Mono.just(new ResponseDataDTO<UserDTO>(null, "Erro ao encontrar usuário")));
     }
 }
